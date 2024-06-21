@@ -1,4 +1,5 @@
 #![allow(clippy::unused_async)]
+use axum::debug_handler;
 use loco_rs::prelude::*;
 use axum::debug_handler;
 
