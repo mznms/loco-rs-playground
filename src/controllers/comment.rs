@@ -5,28 +5,18 @@ use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::models::_entities::{
-    articles::{ActiveModel, Entity, Model},
-    comments,
-};
-
-#[debug_handler]
-pub async fn comments(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
-    let item = load_item(&ctx, id).await?;
-    let comments = item.find_related(comments::Entity).all(&ctx.db).await?;
-    format::json(comments)
-}
+use crate::models::_entities::comments::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
-    pub title: Option<String>,
     pub content: Option<String>,
+    pub article_id: i32,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-        item.title = Set(self.title.clone());
         item.content = Set(self.content.clone());
+        item.article_id = Set(self.article_id);
     }
 }
 
@@ -51,17 +41,6 @@ pub async fn add(State(ctx): State<AppContext>, Json(params): Json<Params>) -> R
 }
 
 #[debug_handler]
-pub async fn get_one(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
-    format::json(load_item(&ctx, id).await?)
-}
-
-#[debug_handler]
-pub async fn remove(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
-    load_item(&ctx, id).await?.delete(&ctx.db).await?;
-    format::empty()
-}
-
-#[debug_handler]
 pub async fn update(
     Path(id): Path<i32>,
     State(ctx): State<AppContext>,
@@ -74,13 +53,21 @@ pub async fn update(
     format::json(item)
 }
 
+#[debug_handler]
+pub async fn remove(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
+    load_item(&ctx, id).await?.delete(&ctx.db).await?;
+    format::empty()
+}
+
+#[debug_handler]
+pub async fn get_one(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
+    format::json(load_item(&ctx, id).await?)
+}
+
 pub fn routes() -> Routes {
-    Routes::new()
-        .prefix("articles")
-        .add("/", get(list))
-        .add("/", post(add))
-        .add("/:id", get(get_one))
-        .add("/:id", delete(remove))
-        .add("/:id", post(update))
-        .add("/:id/comments", get(comments))
+    Routes::new().prefix("comments").add("/", post(add))
+    // .add("/", get(list))
+    // .add("/:id", get(get_one))
+    // .add("/:id", delete(remove))
+    // .add("/:id", post(update))
 }

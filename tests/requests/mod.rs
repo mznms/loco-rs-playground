@@ -4,3 +4,5 @@ mod prepare_data;
 mod user;
 
 pub mod guide;
+
+pub mod comment;
