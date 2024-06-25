@@ -1,0 +1,8 @@
+---
+source: tests/requests/articles.rs
+expression: "(articles.status_code(), articles.text())"
+---
+(
+    200,
+    "[{\"created_at\":\"DATE\",\"updated_at\":\"DATE\",\"id\":ID,\"title\":\"Loco article 1\",\"content\":\"Loco article 1 content\"},{\"created_at\":\"DATE\",\"updated_at\":\"DATE\",\"id\":ID,\"title\":\"Loco article 2\",\"content\":\"Loco article 2 content\"}]",
+)

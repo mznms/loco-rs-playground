@@ -1,0 +1,8 @@
+---
+source: tests/requests/articles.rs
+expression: "(delete_article_request.status_code(), delete_article_request.text())"
+---
+(
+    200,
+    "",
+)

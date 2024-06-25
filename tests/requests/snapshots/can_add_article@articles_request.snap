@@ -1,0 +1,8 @@
+---
+source: tests/requests/articles.rs
+expression: "(add_article_request.status_code(), add_article_request.text())"
+---
+(
+    200,
+    "{\"created_at\":\"DATE\",\"updated_at\":\"DATE\",\"id\":ID,\"title\":\"loco\",\"content\":\"loco article test\"}",
+)

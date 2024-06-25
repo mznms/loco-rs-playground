@@ -5,4 +5,4 @@ mod user;
 
 pub mod guide;
 
-pub mod comment;
+pub mod articles;
